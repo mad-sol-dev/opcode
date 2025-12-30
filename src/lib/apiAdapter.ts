@@ -257,6 +257,11 @@ function mapCommandToEndpoint(command: string, _params?: any): string {
     'slash_command_get': '/api/slash-commands/{commandId}',
     'slash_command_save': '/api/slash-commands',
     'slash_command_delete': '/api/slash-commands/{commandId}',
+
+    // Speech-to-Text commands
+    'transcribe_audio': '/api/stt/transcribe',
+    'get_stt_settings': '/api/stt/settings',
+    'save_stt_settings': '/api/stt/settings',
   };
 
   const endpoint = commandToEndpoint[command];

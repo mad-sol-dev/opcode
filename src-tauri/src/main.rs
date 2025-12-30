@@ -37,6 +37,10 @@ use commands::mcp::{
 };
 
 use commands::proxy::{apply_proxy_settings, get_proxy_settings, save_proxy_settings};
+use commands::stt::{
+    cancel_subprocess_recording, get_stt_settings, save_audio_temp_file, save_stt_settings,
+    start_subprocess_recording, stop_subprocess_recording, transcribe_audio, RecordingProcess,
+};
 use commands::storage::{
     storage_delete_row, storage_execute_sql, storage_insert_row, storage_list_tables,
     storage_read_table, storage_reset_database, storage_update_row,
@@ -146,6 +150,9 @@ fn main() {
 
             // Initialize Claude process state
             app.manage(ClaudeProcessState::default());
+
+            // Initialize recording process state
+            app.manage(RecordingProcess(std::sync::Mutex::new(None)));
 
             // Apply window vibrancy with rounded corners on macOS
             #[cfg(target_os = "macos")]
@@ -289,6 +296,15 @@ fn main() {
             // Proxy Settings
             get_proxy_settings,
             save_proxy_settings,
+            // Speech-to-Text
+            save_audio_temp_file,
+            transcribe_audio,
+            get_stt_settings,
+            save_stt_settings,
+            // Subprocess recording (Linux workaround)
+            start_subprocess_recording,
+            stop_subprocess_recording,
+            cancel_subprocess_recording,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

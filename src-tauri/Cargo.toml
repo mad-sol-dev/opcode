@@ -5,6 +5,7 @@ description = "GUI app and Toolkit for Claude Code"
 authors = ["mufeedvh", "123vviekr"]
 license = "AGPL-3.0"
 edition = "2021"
+default-run = "opcode"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -47,7 +48,7 @@ regex = "1"
 glob = "0.3"
 base64 = "0.22"
 libc = "0.2"
-reqwest = { version = "0.12", features = ["json", "native-tls-vendored"] }
+reqwest = { version = "0.12", features = ["json", "native-tls-vendored", "multipart"] }
 futures = "0.3"
 async-trait = "0.1"
 tempfile = "3"

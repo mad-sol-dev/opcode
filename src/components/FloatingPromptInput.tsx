@@ -22,6 +22,7 @@ import { TooltipProvider, TooltipSimple, Tooltip, TooltipTrigger, TooltipContent
 import { FilePicker } from "./FilePicker";
 import { SlashCommandPicker } from "./SlashCommandPicker";
 import { ImagePreview } from "./ImagePreview";
+import { PushToTalkButton } from "./ui/PushToTalkButtonSubprocess"; // Using subprocess for Linux
 import { type FileEntry, type SlashCommand } from "@/lib/api";
 
 // Conditional import for Tauri webview window
@@ -807,6 +808,22 @@ const FloatingPromptInputInner = (
     // File processing is handled by Tauri's onDragDropEvent
   };
 
+  const handleTranscription = (text: string) => {
+    // Append transcribed text to the current prompt
+    setPrompt((prev) => {
+      const separator = prev.trim() ? ' ' : '';
+      return prev + separator + text;
+    });
+
+    // Focus the textarea
+    setTimeout(() => {
+      const target = isExpanded ? expandedTextareaRef.current : textareaRef.current;
+      target?.focus();
+      const newLength = (prompt + (prompt.trim() ? ' ' : '') + text).length;
+      target?.setSelectionRange(newLength, newLength);
+    }, 0);
+  };
+
   const handleRemoveImage = (index: number) => {
     // Remove the corresponding @mention from the prompt
     const imagePath = embeddedImages[index];
@@ -1246,6 +1263,12 @@ const FloatingPromptInputInner = (
 
                 {/* Action buttons inside input - fixed at bottom right */}
                 <div className="absolute right-1.5 bottom-1.5 flex items-center gap-0.5">
+                  <PushToTalkButton
+                    onTranscription={handleTranscription}
+                    disabled={disabled}
+                    className="h-8 w-8"
+                  />
+
                   <TooltipSimple content="Expand (Ctrl+Shift+E)" side="top">
                     <motion.div
                       whileTap={{ scale: 0.97 }}

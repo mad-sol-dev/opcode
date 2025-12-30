@@ -27,6 +27,7 @@ import { StorageTab } from "./StorageTab";
 import { HooksEditor } from "./HooksEditor";
 import { SlashCommandsManager } from "./SlashCommandsManager";
 import { ProxySettings } from "./ProxySettings";
+import { SttSettings } from "./SttSettings";
 import { useTheme, useTrackEvent } from "@/hooks";
 import { analytics } from "@/lib/analytics";
 import { TabPersistenceService } from "@/services/tabPersistence";
@@ -87,6 +88,10 @@ export const Settings: React.FC<SettingsProps> = ({
   // Proxy state
   const [proxySettingsChanged, setProxySettingsChanged] = useState(false);
   const saveProxySettings = React.useRef<(() => Promise<void>) | null>(null);
+
+  // STT state
+  const [sttSettingsChanged, setSttSettingsChanged] = useState(false);
+  const saveSttSettings = React.useRef<(() => Promise<void>) | null>(null);
   
   // Analytics state
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
@@ -235,6 +240,12 @@ export const Settings: React.FC<SettingsProps> = ({
       if (proxySettingsChanged && saveProxySettings.current) {
         await saveProxySettings.current();
         setProxySettingsChanged(false);
+      }
+
+      // Save STT settings if changed
+      if (sttSettingsChanged && saveSttSettings.current) {
+        await saveSttSettings.current();
+        setSttSettingsChanged(false);
       }
 
       setToast({ message: "Settings saved successfully!", type: "success" });
@@ -393,7 +404,7 @@ export const Settings: React.FC<SettingsProps> = ({
       ) : (
         <div className="flex-1 overflow-y-auto p-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-8 w-full mb-6 h-auto p-1">
+            <TabsList className="grid grid-cols-9 w-full mb-6 h-auto p-1">
               <TabsTrigger value="general" className="py-2.5 px-3">General</TabsTrigger>
               <TabsTrigger value="permissions" className="py-2.5 px-3">Permissions</TabsTrigger>
               <TabsTrigger value="environment" className="py-2.5 px-3">Environment</TabsTrigger>
@@ -402,6 +413,7 @@ export const Settings: React.FC<SettingsProps> = ({
               <TabsTrigger value="commands" className="py-2.5 px-3">Commands</TabsTrigger>
               <TabsTrigger value="storage" className="py-2.5 px-3">Storage</TabsTrigger>
               <TabsTrigger value="proxy" className="py-2.5 px-3">Proxy</TabsTrigger>
+              <TabsTrigger value="voice" className="py-2.5 px-3">Voice</TabsTrigger>
             </TabsList>
             
             {/* General Settings */}
@@ -1049,7 +1061,7 @@ export const Settings: React.FC<SettingsProps> = ({
             {/* Proxy Settings */}
             <TabsContent value="proxy">
               <Card className="p-6">
-                <ProxySettings 
+                <ProxySettings
                   setToast={setToast}
                   onChange={(hasChanges, _getSettings, save) => {
                     setProxySettingsChanged(hasChanges);
@@ -1058,7 +1070,20 @@ export const Settings: React.FC<SettingsProps> = ({
                 />
               </Card>
             </TabsContent>
-            
+
+            {/* Voice/STT Settings */}
+            <TabsContent value="voice">
+              <Card className="p-6">
+                <SttSettings
+                  setToast={setToast}
+                  onChange={(hasChanges, save) => {
+                    setSttSettingsChanged(hasChanges);
+                    saveSttSettings.current = save;
+                  }}
+                />
+              </Card>
+            </TabsContent>
+
           </Tabs>
         </div>
       )}
