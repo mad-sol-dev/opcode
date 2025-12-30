@@ -106,6 +106,16 @@ Think of opcode as your command center for Claude Code - bridging the gap betwee
 - **Project Scanner**: Find all CLAUDE.md files in your projects
 - **Syntax Highlighting**: Full markdown support with syntax highlighting
 
+### 🎤 **Speech-to-Text (Linux Only)**
+- **Push-to-Talk Recording**: Record voice input and automatically transcribe to text
+- **Mistral Voxtral Integration**: Uses Mistral's state-of-the-art speech recognition API
+- **Hands-Free Input**: Speak your prompts instead of typing them
+- **Automatic Insertion**: Transcribed text appears directly in your prompt input
+- ⚠️ **Linux Only**: Uses subprocess-based recording (`arecord`) as workaround for WebKitGTK microphone permission issues
+- **Configuration**: Set your Mistral API key in Settings → Voice tab
+
+> **Note**: This is a platform-specific workaround implementation. The feature requires `arecord` (ALSA utils) installed on Linux. Windows/macOS support may be added in the future when WebKitGTK issues are resolved.
+
 ## 📖 Usage
 
 ### Getting Started
